@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Calendar</title>
+    <!-- Google Fonts: Inter, Roboto, Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles/calendar.css">
+    <link rel="stylesheet" href="styles/themes.css">
+</head>
+<body>
+
+    <nav class="top-nav">
+        <div class="nav-left">
+            <button id="menuToggle" class="nav-btn icon-btn menu-toggle" aria-label="Toggle Menu">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            </button>
+            <div class="nav-brand">
+                <span class="logo-icon">📅</span>
+                <span class="logo-text">Calendar</span>
+            </div>
+        </div>
+        
+        <div class="nav-center">
+            <button id="todayBtn" class="nav-btn" style="margin-right:8px; font-size:0.9rem; padding:6px 12px; border:1px solid var(--border-color); border-radius:6px; background:white; cursor:pointer;">Today</button>
+            <button id="prevBtn" class="nav-btn icon-btn" aria-label="Previous">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            </button>
+            <h2 id="monthYear"></h2>
+            <button id="nextBtn" class="nav-btn icon-btn" aria-label="Next">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+        </div>
+
+        <div class="nav-right">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search events..." class="search-input">
+                <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </div>
+            <div class="view-switch">
+                <button class="view-btn active" data-view="month">Month</button>
+                <button class="view-btn" data-view="week">Week</button>
+                <button class="view-btn" data-view="day">Day</button>
+                <button class="view-btn" data-view="agenda">Agenda</button>
+            </div>
+            <button id="settingsBtn" class="icon-btn" aria-label="Settings">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
+            <div class="profile-icon">👤</div>
+        </div>
+    </nav>
+
+    <div class="app-layout">
+        <!-- Mobile Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Left -->
+        <aside class="sidebar-left" id="sidebarLeft" aria-label="Sidebar">
+            <button class="btn-create-event" aria-label="Create New Event">
+                <span class="plus-icon">+</span> Create Event
+            </button>
+
+            <div class="mini-calendar-container">
+                <div class="mini-calendar-header">
+                    <span class="mini-month" id="miniCalendarMonth"></span>
+                    <div class="mini-nav">
+                        <button id="miniPrev" class="mini-nav-btn">&lt;</button>
+                        <button id="miniNext" class="mini-nav-btn">&gt;</button>
+                    </div>
+                </div>
+                <div class="mini-calendar-grid" id="miniCalendarGrid">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h4>Filters</h4>
+                <!-- Date Range -->
+                <div class="date-range-filter" style="margin-bottom: 16px;">
+                    <label style="display:block; font-size:0.75rem; color:var(--text-secondary); margin-bottom:4px;">Date Range</label>
+                    <div style="display:flex; gap:8px;">
+                        <input type="date" id="filterStartDate" style="width:100%; padding:4px; border:1px solid var(--border-color); border-radius:4px; font-size:0.8rem;">
+                        <input type="date" id="filterEndDate" style="width:100%; padding:4px; border:1px solid var(--border-color); border-radius:4px; font-size:0.8rem;">
+                    </div>
+                </div>
+
+                <div class="category-filters">
+                    <label class="category-filter">
+                        <input type="checkbox" checked value="personal">
+                        <span class="checkmark personal" style="--cat-color: #3B82F6;"></span>
+                        Personal
+                    </label>
+                    <label class="category-filter">
+                        <input type="checkbox" checked value="work">
+                        <span class="checkmark work" style="--cat-color: #F59E0B;"></span>
+                        Work
+                    </label>
+                    <label class="category-filter">
+                        <input type="checkbox" checked value="study">
+                        <span class="checkmark study" style="--cat-color: #8B5CF6;"></span>
+                        Study
+                    </label>
+                    <label class="category-filter">
+                        <input type="checkbox" checked value="travel">
+                        <span class="checkmark travel" style="--cat-color: #10B981;"></span>
+                        Travel
+                    </label>
+                    <label class="category-filter">
+                        <input type="checkbox" checked value="health">
+                        <span class="checkmark health" style="--cat-color: #EF4444;"></span>
+                        Health
+                    </label>
+                </div>
+            </div>
+            
+            <div class="sidebar-section mt-auto">
+                <div class="shared-calendars-toggle">
+                    <label class="switch-label">
+                        <span>Shared Calendars</span>
+                        <label class="switch">
+                            <input type="checkbox" id="sharedCalendarsToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Calendar Area -->
+        <main class="calendar-main">
+            <!-- Grid Header (Sun-Sat) -->
+            <div class="calendar-grid-header" id="calendarGridHeader">
+                <div>Sun</div><div>Mon</div><div>Tue</div>
+                <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <!-- Month Grid -->
+            <div class="calendar-grid" id="dates">
+                <!-- Dates injected here -->
+            </div>
+            <!-- Week/Day/Agenda Views (Initially hidden) -->
+            <div class="calendar-view-container hidden" id="calendarViewContainer">
+                <!-- Content for other views -->
+            </div>
+        </main>
+
+        <!-- Event Details Panel (Right Sidebar) -->
+        <aside class="event-details-panel hidden-panel" id="eventDetailsPanel" aria-label="Event Details">
+            <div class="panel-header">
+                <h3>Events</h3>
+                <button class="btn-close-panel" id="closePanelBtn" aria-label="Close Panel">×</button>
+            </div>
+            <div class="event-list-content" id="eventList">
+                <p style="color:var(--text-secondary); text-align:center; margin-top:20px;">Select a date to view events.</p>
+            </div>
+        </aside>
+
+        <!-- Mobile FAB -->
+        <div class="mobile-fab" id="mobileFab" aria-label="Create Event">
+            <span>+</span>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast hidden">Event Saved Successfully!</div>
+    </div>
+
+    <!-- Event Modal -->
+    <div id="eventModal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modalTitle">Add Event</h3>
+            <p id="eventDateDisplay"></p>
+            <form id="eventForm">
+                <input type="hidden" id="eventId">
+                
+                <div class="form-group">
+                    <label for="eventTitle">Title</label>
+                    <input type="text" id="eventTitle" placeholder="Event Title" required autofocus>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="startTime">Start Time</label>
+                        <input type="time" id="startTime">
+                    </div>
+                    <div class="form-group half">
+                        <label for="endTime">End Time</label>
+                        <input type="time" id="endTime">
+                    </div>
+                </div>
+                
+                <div class="form-group checkbox-group">
+                    <label>
+                        <input type="checkbox" id="isAllDay"> All Day
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="eventDesc">Description</label>
+                    <textarea id="eventDesc" rows="3" placeholder="Add details..."></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="eventCategory">Category</label>
+                        <select id="eventCategory">
+                            <option value="personal">Personal</option>
+                            <option value="work">Work</option>
+                            <option value="study">Study</option>
+                            <option value="travel">Travel</option>
+                            <option value="health">Health</option>
+                        </select>
+                    </div>
+                    <div class="form-group half">
+                        <label for="eventColor">Color</label>
+                        <input type="color" id="eventColor" value="#3B82F6">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="eventReminder">Reminder</label>
+                    <select id="eventReminder">
+                        <option value="none">None</option>
+                        <option value="5">5 minutes before</option>
+                        <option value="15">15 minutes before</option>
+                        <option value="60">1 hour before</option>
+                        <option value="1440">1 day before</option>
+                    </select>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" id="deleteEventBtn" class="btn-delete hidden">Delete</button>
+                    <div class="right-actions">
+                        <button type="button" id="cancelBtn" class="btn-cancel">Cancel</button>
+                        <button type="submit" class="btn-save">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Settings</h3>
+            <div class="form-group">
+                <label for="settingStartWeek">Start Week On</label>
+                <select id="settingStartWeek">
+                    <option value="sunday">Sunday</option>
+                    <option value="monday">Monday</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="settingTimeFormat">Time Format</label>
+                <select id="settingTimeFormat">
+                    <option value="12h">12 Hour</option>
+                    <option value="24h">24 Hour</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="settingDefaultView">Default View</label>
+                <select id="settingDefaultView">
+                    <option value="month">Month</option>
+                    <option value="week">Week</option>
+                    <option value="day">Day</option>
+                    <option value="agenda">Agenda</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="settingTheme">Theme</label>
+                <select id="settingTheme">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="high-contrast">High Contrast</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Notifications</label>
+                <button type="button" id="enableNotificationsBtn" class="btn-secondary" style="width: 100%; text-align: center;">Enable Desktop Notifications</button>
+            </div>
+            <div class="modal-actions">
+                <div class="right-actions">
+                    <button type="button" id="closeSettingsBtn" class="btn-cancel">Close</button>
+                    <button type="button" id="saveSettingsBtn" class="btn-save">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/storage.js" defer></script>
+    <script src="scripts/calendar.js" defer></script>
+    <script src="scripts/events.js" defer></script>
+    <script src="scripts/navigation.js" defer></script>
+    <script src="components/eventList.js" defer></script>
+    <script src="components/miniCalendar.js" defer></script>
+    <script src="scripts/search.js" defer></script>
+    <script src="scripts/notifications.js" defer></script>
+    <script src="scripts/settings.js" defer></script>
+    <script src="scripts/sidebar.js" defer></script>
+
+</body>
+</html>

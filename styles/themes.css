@@ -1,0 +1,64 @@
+/* --- Dark Theme --- */
+body.dark-theme {
+    --bg-color: #0F172A;
+    --surface-color: #1E293B;
+    --border-color: #334155;
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-tertiary: #64748B;
+}
+
+/* --- High Contrast Theme --- */
+body.high-contrast {
+    --bg-color: #FFFFFF;
+    --surface-color: #FFFFFF;
+    --border-color: #000000;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --text-tertiary: #000000;
+    --primary-color: #000000;
+    --primary-hover: #333333;
+    
+    /* Force borders */
+    --status-success: #000000;
+    --status-warning: #000000;
+    --status-error: #000000;
+}
+
+body.high-contrast .date,
+body.high-contrast .sidebar-left,
+body.high-contrast .top-nav,
+body.high-contrast .event-details-panel,
+body.high-contrast .modal-content,
+body.high-contrast .form-group input,
+body.high-contrast .form-group select,
+body.high-contrast .form-group textarea,
+body.high-contrast .btn-cancel,
+body.high-contrast .event-preview,
+body.high-contrast .event-block,
+body.high-contrast .agenda-event {
+    border: 2px solid #000000 !important;
+}
+
+body.high-contrast .event-preview,
+body.high-contrast .event-block {
+    background-color: #FFFFFF !important;
+    color: #000000 !important;
+    font-weight: 700;
+}
+
+body.high-contrast .btn-save,
+body.high-contrast .btn-create-event {
+    background-color: #000000;
+    color: #FFFFFF;
+    border: 2px solid #000000;
+    font-weight: 700;
+}
+
+body.high-contrast .date.today {
+    background-color: #FFFF00; /* Yellow highlight */
+}
+
+body.high-contrast .date.selected {
+    box-shadow: inset 0 0 0 4px #000000;
+}
